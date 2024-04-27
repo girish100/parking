@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block title %}
+
+<title>Vehicle Entry</title>
+
+{% endblock %} {% load static %} <!-- block for css end here -->
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- boostrap css -->
+
+    <style>
+      .demo li:hover {
+        background-color: blue;
+      }
+      a{
+        text-decoration: none;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- nav bar heading start -->
+    <div class="sticky-top">
+        {% include 'navbar.html' %}
+
+      <!-- niv bar heading end -->
+      <!-- side bar start -->
+      <div class="d-flex flex-row">
+        {% include 'sidebar.html' %}
+        <!-- side bar end -->
+        <div class="container">
+          <div class="row g-2">
+            <div class="col-7 border border-light-subtle p-3">
+              <!-- As a heading -->
+              <nav class="navbar bg-body-tertiary ">
+                <div class="container-fluid ps-0">
+                  <span class="navbar-brand mb-0 h1"
+                    ><i class="bi bi-box-arrow-in-right"></i>Add Vehicle</span
+                  >
+                </div>
+              </nav>
+              <form class="row g-3" action="{% url 'add_vehicle' %}" method="post">
+                {% csrf_token %}
+                <div class="col-md-6">
+                  <label for="vehiclenumber" class="form-label"
+                    >Vehicle Number</label
+                  >
+                  <input type="text" class="form-control" name="vehicleNumber"/>
+                </div>
+                <div class="col-md-6">
+
+                  <label  class="form-lable">Vehicle Type</label>
+                    <select  name="vehicleType" class="form-select">
+
+                      <option selected>select the vehicle type</option>
+                       {% for i in vehicle_type %}
+                      <option name="{{ i }}" value="{{ i.vehicle_type }}">{{ i.vehicle_type }}</option>
+                      {% endfor %}
+                    </select>
+
+                </div>
+                <div class="col-12">
+
+                  <label for="parkingAreaNumber" class="form-lable">Parking Area Number</label>
+                    <select name="parkingAreaNumber" class="form-select">
+                      <option selected>Parking Area Number</option>
+                      {% for i in parking_area_no %}
+                      <option value="{{ i.parking_area_no }}">{{ i.parking_area_no }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12">
+                  <label  class="form-lable">Parking Charge</label>
+                    <select name="parkingCharge" class="form-select">
+                      <option selected>Select Parking Charge</option>
+                      {% for i in parking_charge %}
+                      <option name="" value="{{i.parking_charge}}">{{i.parking_charge}}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 d-grid gap-2">
+                  <button class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
+            <!--add vehicle end-->
+            <div class="col-5 border border-light-subtle p-3 column-gap-3">
+              <nav class="navbar bg-body-tertiary">
+                <div class="container-fluid  ps-0">
+                  <span class="navbar-brand mb-0 h1"
+                    ><i class="bi bi-info-circle"></i>Vehicle Limitation</span
+                  >
+                </div>
+              </nav>
+              <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
+                {% for i,j in sai %}
+
+                <li class="list-group-item pt-2">{{ i.vehicle_type }} Limit:<span class="float-end pt-2"><span class="bg-success text-white p-1" style="border-radius:6px;">{{ j }}</span>&nbsp;Out&nbsp;of&nbsp;{{ i.vehicle_limit }} </span></li>
+
+
+                {% endfor %}
+
+
+              </ul>
+            </div>
+            <!--detaile end-->
+            <div class="row mt-3">
+        <div class="col-10">
+          <div class="manage-category-div">
+            <div class="manage-category-head">Current Vehicles</div>
+            <div class="manage-show-search">
+              <div class="show">
+                Show
+                <span class="show-input"
+                  ><input value="10" type="number"
+                /></span>
+                entries
+              </div>
+              <div class="search-input">
+                <form action="{% url 'vehicle_entry' %}" method="get">
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="search"
+                      placeholder="Search"
+                      aria-describedby="search-icon"
+                      value="{{search_query}}"
+                    />
+
+                    <button
+                      type="submit"
+                      href=""
+                      class="input-group-text btn btn-primary"
+                    >
+                      search
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="manage-category-body">
+              <table class="table table-bordered table-striped text-center">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Vehicle Number</th>
+                    <th scope="col">Area Number</th>
+                    <th scope="col">Arrival Time</th>
+                    <th scope="col">Status</th>
+
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for vehicle in vehicle_data %}
+                  <tr>
+                    <th>{{forloop.counter}}</th>
+                    <td>{{vehicle.vehicle_no}}</td>
+                    <td>{{vehicle.parking_area_no}}</td>
+                    <td>{{vehicle.arrival_time}}</td>
+                    <td>
+                      <span class="badge text-bg-success"
+                        >{{vehicle.status}}</span
+                      >
+                    </td>
+
+                    <td>
+                      <a class="btn btn-secondary">Receipt</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              <!-- pagination -->
+             {% include 'pagination.html' %}
+              <!-- pagination end here -->
+            </div>
+          </div>
+        </div>
+      </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+{% endblock %}
